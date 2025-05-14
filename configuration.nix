@@ -21,6 +21,7 @@ in
       ./modules/local-hardware-clock.nix
       ./modules/intel-drivers.nix
       ./modules/nvidia-drivers.nix
+      ./remote-drives.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -57,8 +58,14 @@ in
     timeServers = options.networking.timeServers.default ++ [ "pool.ntp.org" ];
     firewall = {
       # enable = false; # Disable the firewall
-      # allowedTCPPorts = [ ... ]; # Open ports in the firewall.
-      # allowedUDPPorts = [ ... ];
+#      allowedTCPPorts = [ 80 8080 443 ]; # Open ports in the firewall.
+      allowedTCPPortRanges = [
+        { from=54992; to=54994; }  # Ports for FF14
+        { from=55006; to=55007; }  # Ports for FF14
+        { from=55021; to=55040; }  # Ports for FF14
+      ]; # Open ports in the firewall.
+#      allowedUDPPorts = [ ... ];
+#      allowedUDPPortRanges = [{ from=55296; to=55551; }];
     };
   };
 
@@ -78,6 +85,14 @@ in
       LC_PAPER = "en_US.UTF-8";
       LC_TELEPHONE = "en_US.UTF-8";
       LC_TIME = "en_US.UTF-8";
+    };
+  };
+
+  fileSystems = {
+    # Mount disk drives.
+    "/run/media/llisandur/games" = {
+      device = "/dev/disk/by-label/games";
+      fsType = "ext4";
     };
   };
 
@@ -101,6 +116,7 @@ in
       gamescopeSession.enable = true;
       remotePlay.openFirewall = true;
       dedicatedServer.openFirewall = true;
+      protontricks.enable = true;
     };
     gamemode.enable = true;
     # system Programs
@@ -178,7 +194,10 @@ in
       # compatibility
       bottles
       # games
+      protontricks
+      protonup-qt
       steam
+      xivlauncher
       #unstable.archipelago
       # hardware stats
       dmidecode
@@ -277,9 +296,7 @@ in
   };
   systemd.services.flatpak-repo = {
     path = [ pkgs.flatpak ];
-    script = ''
-      flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    '';
+    script = ''flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo'';
   };
 
 
@@ -300,12 +317,6 @@ in
         };
       };
     };
-    # OpenGL
-#    opengl = {
-#      enable = true;
-#      driSupport = true;
-#      driSupport32Bit = true;
-#    };
     # Scanner access easy now
     sane = {
       enable = true;
@@ -318,6 +329,7 @@ in
       };
     };
     xone.enable = true;  # Set up Microsoft accessories drivers.
+    graphics.enable = true;
   };
 
   # Security
