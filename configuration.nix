@@ -18,6 +18,7 @@ in
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./users.nix
+      ./localization.nix
       ./modules/local-hardware-clock.nix
       ./modules/intel-drivers.nix
       ./modules/nvidia-drivers.nix
@@ -40,13 +41,13 @@ in
   # Extra module options
   drivers = {
     # amdpgu.enable = false;
-    nvidia.enable = false;
+    nvidia.enable = true;
 #    nvidia-prime = {
 #      enable = false;
 #      intelBusID = "";
 #      nvidiaBusID = "";
 #    };
-    intel.enable = true;
+    intel.enable = false;
   };
 #  vm.guest-services.enable = false;
   local.hardware-clock.enable = false;
@@ -60,31 +61,12 @@ in
       # enable = false; # Disable the firewall
 #      allowedTCPPorts = [ 80 8080 443 ]; # Open ports in the firewall.
       allowedTCPPortRanges = [
-        { from=54992; to=54994; }  # Ports for FF14
-        { from=55006; to=55007; }  # Ports for FF14
-        { from=55021; to=55040; }  # Ports for FF14
+#        { from=54992; to=54994; }  # Ports for FF14
+#        { from=55006; to=55007; }  # Ports for FF14
+#        { from=55021; to=55040; }  # Ports for FF14
       ]; # Open ports in the firewall.
 #      allowedUDPPorts = [ ... ];
 #      allowedUDPPortRanges = [{ from=55296; to=55551; }];
-    };
-  };
-
-  # Set your time zone.
-  time.timeZone = "America/Chicago";
-
-  # Select internationalisation properties.
-  i18n = {
-    defaultLocale = "en_US.UTF-8";
-    extraLocaleSettings = {
-      LC_ADDRESS = "en_US.UTF-8";
-      LC_IDENTIFICATION = "en_US.UTF-8";
-      LC_MEASUREMENT = "en_US.UTF-8";
-      LC_MONETARY = "en_US.UTF-8";
-      LC_NAME = "en_US.UTF-8";
-      LC_NUMERIC = "en_US.UTF-8";
-      LC_PAPER = "en_US.UTF-8";
-      LC_TELEPHONE = "en_US.UTF-8";
-      LC_TIME = "en_US.UTF-8";
     };
   };
 
@@ -169,7 +151,7 @@ in
       tree
       wget
 #      dislocker
-      libguestfs
+      qemu-utils
       samba
       gparted
       # kde packages
@@ -177,7 +159,7 @@ in
       kdePackages.kcalc
       kdePackages.krdc
       kdePackages.krfb
-      kdePackages.kdeconnect-kde
+#      kdePackages.kdeconnect-kde
       kdePackages.plasma-browser-integration
       # audio
       pavucontrol
@@ -194,14 +176,15 @@ in
       # compatibility
       bottles
       # games
-      protontricks
+#      protontricks
       protonup-qt
-      steam
+#      steam
       xivlauncher
       #unstable.archipelago
       # hardware stats
       dmidecode
       lshw
+      usbutils
       # internet
       mullvad-vpn
 #      openvpn3
@@ -223,26 +206,13 @@ in
       kitty-img
       pixcat
       # terminal
-      zsh
+#      zsh
       zsh-powerlevel10k
       # Utility
       libsForQt5.filelight
       # version control
       gh
-      git
-    ];
-  };
-
-  fonts = {
-    packages = with pkgs; [
-      # corefonts
-      font-awesome
-      material-icons
-      nerdfonts
-      noto-fonts-cjk-sans
-      noto-fonts-emoji
-      symbola
-      # vistafonts
+#      git
     ];
   };
 
