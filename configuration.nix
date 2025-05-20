@@ -190,7 +190,7 @@ in
 #      openvpn3
       # media
       unstable.gimp3
-      jellyfin-media-player
+      unstable.jellyfin-media-player
       vlc
       # nix control
       nh
