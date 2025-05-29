@@ -19,6 +19,7 @@ in
       ./hardware-configuration.nix
       ./users.nix
       ./localization.nix
+      ./fonts.nix
       ./modules/local-hardware-clock.nix
       ./modules/intel-drivers.nix
       ./modules/nvidia-drivers.nix
@@ -59,14 +60,23 @@ in
     timeServers = options.networking.timeServers.default ++ [ "pool.ntp.org" ];
     firewall = {
       # enable = false; # Disable the firewall
-#      allowedTCPPorts = [ 80 8080 443 ]; # Open ports in the firewall.
+      allowedTCPPorts = [
+        6073  # Baldur's Gate II Enhanced Edition
+        47630  # Baldur's Gate II Enhanced Edition
+      ]; # Open ports in the firewall.
       allowedTCPPortRanges = [
+         { from=2300; to=2400; }  # Baldur's Gate II Enhanced Edition
 #        { from=54992; to=54994; }  # Ports for FF14
 #        { from=55006; to=55007; }  # Ports for FF14
 #        { from=55021; to=55040; }  # Ports for FF14
       ]; # Open ports in the firewall.
-#      allowedUDPPorts = [ ... ];
-#      allowedUDPPortRanges = [{ from=55296; to=55551; }];
+      allowedUDPPorts = [
+        6073  # Baldur's Gate II Enhanced Edition
+        47630  # Baldur's Gate II Enhanced Edition
+      ];
+      allowedUDPPortRanges = [
+        { from=2300; to=2400; }  # Baldur's Gate II Enhanced Edition
+      ];
     };
   };
 
@@ -90,6 +100,7 @@ in
       kontact = true;
       merkuro = true;
     };
+    chromium.enablePlasmaBrowserIntegration = true;
     # browser
 #    firefox.enable = true;
     # games
@@ -160,7 +171,7 @@ in
       kdePackages.krdc
       kdePackages.krfb
 #      kdePackages.kdeconnect-kde
-      kdePackages.plasma-browser-integration
+#      kdePackages.plasma-browser-integration
       # audio
       pavucontrol
       # browser
@@ -187,11 +198,15 @@ in
       usbutils
       # internet
       mullvad-vpn
-#      openvpn3
       # media
       unstable.gimp3
+      handbrake
       unstable.jellyfin-media-player
+      mediainfo-gui
+      mkvtoolnix
       vlc
+      yt-dlp
+      media-downloader  # GUI for yt-dlp
       # nix control
       nh
       nix-output-monitor
@@ -210,6 +225,7 @@ in
       zsh-powerlevel10k
       # Utility
       libsForQt5.filelight
+      metamorphose2
       # version control
       gh
 #      git
@@ -240,8 +256,7 @@ in
     };
     flatpak.enable = true;  # Enable flatpak containers
     fprintd.enable = true;  # Enable fingerprint reader support
-    # Enable VPN
-    mullvad-vpn.enable = true;
+    mullvad-vpn.enable = true;  # Enable VPN
     openssh.enable = true;  # Enable the OpenSSH daemon.
     pipewire = {
       enable = true;  # Enable sound.
@@ -269,7 +284,6 @@ in
     script = ''flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo'';
   };
 
-
   # Hardware settings
   hardware = {
     pulseaudio = {
@@ -287,7 +301,7 @@ in
         };
       };
     };
-    # Scanner access easy now
+    # Scanner access now easy
     sane = {
       enable = true;
       extraBackends = [];

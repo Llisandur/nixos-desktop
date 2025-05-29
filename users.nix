@@ -34,9 +34,12 @@ in
     mutableUsers = true;
   };
 
-  system.activationScripts.script.text = ''cp /home/${username}/.nixfiles/config/face.png /var/lib/AccountsService/icons/${username}'';
-#  system.activationScripts.script.text = ''cp /home/${username}/.nixfiles/config/.zshrc /home/${username}'';
-#  system.activationScripts.script.text = ''cp /home/${username}/.nixfiles/config/.p10k.zsh /home/${username}'';
+  system.activationScripts.script.text = ''
+    cp /home/${username}/.nixfiles/config/face.png /var/lib/AccountsService/icons/${username}
+    cp /home/${username}/.nixfiles/config/.zshrc /home/${username}
+    cp /home/${username}/.nixfiles/config/.p10k.zsh /home/${username}
+    cp /home/${username}/.nixfiles/config/kitty.conf /home/${username}/.config/kitty/
+  '';
 
   security.sudo.extraRules = [{
     users = ["${username}"];
