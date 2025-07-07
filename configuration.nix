@@ -6,11 +6,18 @@
 
 # Import Nixos unstable packages.
 let
-  unstableTarball = fetchTarball
-    https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz;
-  unstable = import unstableTarball { config = { allowUnfree = true; }; overlays = []; };
+#  unstableTarball = fetchTarball
+#    https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz;
+#  unstable = import unstableTarball { config = { allowUnfree = true; }; overlays = []; };
+  unstable = import <unstable> { config = { allowUnfree = true; }; overlays = []; };
 
-  inherit (import ./variables.nix) host gitUsername gitEmail;
+#  microsoft-edge = import (fetchTarball https://github.com/Llisandur/microsoft-edge-nix/archive/refs/tags/136.0.2340.76.tar.gz) {inherit config lib pkgs options; };
+
+#  oldTarball = fetchTarball
+#    https://github.com/NixOS/nixpkgs/archive/nixos-24.11.tar.gz;
+#  old = import oldTarball { config = { allowUnfree = true; }; overlays = []; };
+
+  inherit (import ./variables.nix) host username gitUsername gitEmail;
 in
 
 {
@@ -20,16 +27,18 @@ in
       ./users.nix
       ./localization.nix
       ./fonts.nix
+      ./remote-drives.nix
       ./modules/local-hardware-clock.nix
       ./modules/intel-drivers.nix
       ./modules/nvidia-drivers.nix
-      ./remote-drives.nix
+      ./modules/scanbd.nix
+      #./modules/scanbm.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
   boot = {
     # Kernel
-    kernelPackages = pkgs.linuxPackages_latest; # for WiFi support
+    kernelPackages = pkgs.linuxPackages_6_14;
     # Bootloader
     loader = {
       systemd-boot.enable = true;
@@ -98,7 +107,7 @@ in
       enable = true; # kmail, kontact, merkuro (calendar)
       kmail = true;
       kontact = true;
-      merkuro = true;
+      merkuro = false;
     };
     chromium.enablePlasmaBrowserIntegration = true;
     # browser
@@ -161,6 +170,8 @@ in
       btop
       tree
       wget
+      lsof
+      fzf
 #      dislocker
       qemu-utils
       samba
@@ -170,9 +181,11 @@ in
       kdePackages.kcalc
       kdePackages.krdc
       kdePackages.krfb
+      kdePackages.skanpage
 #      kdePackages.kdeconnect-kde
 #      kdePackages.plasma-browser-integration
       # audio
+      kid3
       pavucontrol
       # browser
 #      firefox
@@ -186,12 +199,23 @@ in
       telegram-desktop
       # compatibility
       bottles
+      xsettingsd
+      xorg.xrdb
       # games
 #      protontricks
       protonup-qt
 #      steam
       xivlauncher
-      #unstable.archipelago
+      (retroarch.withCores (cores: with cores; [
+        beetle-saturn
+        bsnes-hd
+        bsnes-mercury
+        bsnes
+        gambatte
+        genesis-plus-gx
+        snes9x2010
+      ]))
+#      poptracker
       # hardware stats
       dmidecode
       lshw
@@ -208,7 +232,7 @@ in
       yt-dlp
       media-downloader  # GUI for yt-dlp
       # nix control
-      nh
+#      nh
       nix-output-monitor
       nvd
       # office
@@ -223,9 +247,12 @@ in
       # terminal
 #      zsh
       zsh-powerlevel10k
+      # ttrpg
+      wonderdraft
       # Utility
       libsForQt5.filelight
       metamorphose2
+      piper
       # version control
       gh
 #      git
@@ -265,12 +292,17 @@ in
       pulse.enable = true;
       wireplumber.enable = true;
     };
+    pulseaudio = {
+      enable = false; # Disable Pulseaudio -- using Pipewire
+      extraConfig = "load-module module-combine-sink";
+    };
     printing.enable = true;  # Enable CUPS to print documents.
     avahi = {
       enable=true;  # Enable printing services (Brother printer)
       nssmdns4=true;
       openFirewall=true;
     };
+    ratbagd.enable = true; # Enable DBus daemon to configure input devices, mainly gaming mice
     xserver = {
       enable = true;  # Enable the X11 windowing system.
       xkb = {  # Configure keymap in X11
@@ -278,6 +310,38 @@ in
         variant = "";
       };
     };
+    scanbd = {
+      enable = true;
+      scantodir = "/home/${username}/Paperless";
+      scanmode = "Color";
+      scanresolution = 300;
+    };
+#    xinetd = {
+#      enable = true;
+#      services = [
+#        {
+#          name = "sane-port";     # Name of the service
+#          port = 6566;            # Port to listen on
+#          protocol = "tcp";       # Protocol for the service
+#          server = "/usr/bin/saned";  # Path to the server executable
+#
+#          extraConfig = ''
+#            # Additional raw configuration for xinetd
+#            service sane-port
+#            {
+#              flags = REUSE;
+#              socket_type = stream;
+#              protocol = tcp;
+#              wait = no;
+#              user = root;
+#              server = /usr/bin/saned;
+#              server_args = "-d";
+#            }
+#          '';
+#        }
+#      ];
+#    };
+
   };
   systemd.services.flatpak-repo = {
     path = [ pkgs.flatpak ];
@@ -286,10 +350,6 @@ in
 
   # Hardware settings
   hardware = {
-    pulseaudio = {
-      enable = false; # Disable Pulseaudio -- using Pipewire
-      extraConfig = "load-module module-combine-sink";
-    };
     # Enable Bluetooth
     bluetooth = {
       enable = true; # enables support for Bluetooth

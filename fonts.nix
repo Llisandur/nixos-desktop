@@ -12,16 +12,16 @@ in
   # Font configuration
   fonts = {
     packages = with pkgs; [
-#      (nerdfonts.override { fonts = [
-#      "FiraCode"
-#      "Inconsolata"
-#      "JetBrainsMono"
-#      ];})
-#      corefonts
+      corefonts
       font-awesome
       material-icons
       migu  # Japanese font fix within programs
-      nerdfonts
+      nerd-fonts.caskaydia-cove
+      nerd-fonts.caskaydia-mono
+      nerd-fonts.fira-code
+      nerd-fonts.inconsolata
+      nerd-fonts.jetbrains-mono
+      nerd-fonts.hack
       noto-fonts
       noto-fonts-cjk-sans
       noto-fonts-cjk-serif
