@@ -35,15 +35,16 @@ in
   };
 
   system.activationScripts.script.text = ''
-    cp /home/${username}/.nixfiles/config/face.png /var/lib/AccountsService/icons/${username}
-    cp /home/${username}/.nixfiles/config/.zshrc /home/${username}
-    cp /home/${username}/.nixfiles/config/.p10k.zsh /home/${username}
-    cp /home/${username}/.nixfiles/config/kitty.conf /home/${username}/.config/kitty/
+    cp /home/${username}/.nixfiles/dotfiles/face.png /var/lib/AccountsService/icons/${username}
+    cp /home/${username}/.nixfiles/dotfiles/.zshrc /home/${username}
+    cp /home/${username}/.nixfiles/dotfiles/.p10k.zsh /home/${username}
+    cp /home/${username}/.nixfiles/dotfiles/.config/kitty/kitty.conf /home/${username}/.config/kitty/
   '';
 
   security.sudo.extraRules = [{
     users = ["${username}"];
-    commands = [{ command = "ALL";
+    commands = [{
+      command = "ALL";
       options = ["NOPASSWD"];
     }];
   }];

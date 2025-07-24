@@ -48,6 +48,12 @@ in
     plymouth.enable = true;
   };
 
+  swapDevices = [{
+    device = "/.swapfile";
+    size = 2*1024; # 2 GB
+    options = [ "discard" ]; # equivalent to swapon --discard
+  }];
+
   # Extra module options
   drivers = {
     # amdpgu.enable = false;
@@ -184,6 +190,8 @@ in
       kdePackages.skanpage
 #      kdePackages.kdeconnect-kde
 #      kdePackages.plasma-browser-integration
+      # 3D printing
+      orca-slicer
       # audio
       kid3
       pavucontrol
@@ -240,6 +248,8 @@ in
       libreoffice-fresh
       obsidian
 #      thunderbird
+      # security
+      bitwarden-desktop
       # shell emulator
       kitty
       kitty-img
@@ -253,6 +263,8 @@ in
       libsForQt5.filelight
       metamorphose2
       piper
+      unrar
+      temurin-jre-bin
       # version control
       gh
 #      git

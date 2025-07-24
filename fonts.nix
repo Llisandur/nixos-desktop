@@ -2,8 +2,8 @@
 
 let
 
-  eorzean-typeface = import (fetchTarball https://github.com/Llisandur/Eorzean-Typeface-Nix/archive/refs/tags/v1.05.tar.gz) {inherit pkgs lib; };
-  eorzean-typeface-nerdfont = import (fetchTarball https://github.com/Llisandur/Eorzean-Typeface-Nerdfont-Nix/archive/refs/tags/v1.03.tar.gz) { inherit pkgs lib; };
+  eorzean-typeface = import <eorzean-typeface> { inherit pkgs lib; };
+  eorzean-typeface-nerdfont = import <eorzean-typeface-nerdfont> { inherit pkgs lib; };
 
 in
 

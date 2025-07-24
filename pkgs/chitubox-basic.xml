@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+    <mime-type type="application/x-ctb">
+        <comment>Chitubox CTB file</comment>
+        <glob pattern="*.ctb"/>
+    </mime-type>
+    <mime-type type="application/x-photon">
+        <comment>Photon file</comment>
+        <glob pattern="*.photon"/>
+    </mime-type>
+</mime-info>

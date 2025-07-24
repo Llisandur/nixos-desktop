@@ -16,3 +16,5 @@ compinit
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+alias rebuild='sudo nixos-rebuild switch |& nom && nvd diff $(ls -d1v /nix/var/nix/profiles/system-*-link|tail -n 2)'
